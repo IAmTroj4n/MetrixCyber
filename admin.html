@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Metrix Cyber</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #F8F9FA;
+            --panel-bg: #FFFFFF;
+            --text-main: #2D3748;
+            --accent-1: #00A896;
+            --border-color: #E2E8F0;
+        }
+        body { margin: 0; background: var(--bg-light); color: var(--text-main); font-family: 'Poppins', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 250px; background: var(--panel-bg); border-right: 1px solid var(--border-color); padding: 2rem; display: flex; flex-direction: column; }
+        .logo { font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; color: var(--text-main); }
+        .logo span { color: var(--accent-1); }
+        .nav-item { padding: 1rem 0; color: #718096; text-decoration: none; border-bottom: 1px solid var(--border-color); transition: 0.3s; font-weight: 500; }
+        .nav-item:hover, .nav-item.active { color: var(--accent-1); border-bottom-color: var(--accent-1); }
+        .main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 2rem; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--panel-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .card h3 { color: var(--text-main); margin-top: 0; margin-bottom: 1rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        th { color: var(--accent-1); font-weight: 600; }
+        .btn { background: var(--accent-1); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">Metrix<span>Cyber</span> Admin</div>
+        <a href="#" class="nav-item active">Dashboard</a>
+        <a href="#" class="nav-item" onclick="loadData()">Refresh Data</a>
+        <a href="index.html" class="nav-item" style="margin-top: auto;">← Back to Site</a>
+    </div>
+    <div class="main-content">
+        <div class="header-top">
+            <h2>System Overview</h2>
+            <div>Admin User</div>
+        </div>
+        
+        <div class="card-grid">
+            <div class="card">
+                <h3>Recent Compliance Requests</h3>
+                <table>
+                    <thead><tr><th>Company</th><th>Standard</th><th>Status</th><th>Date</th></tr></thead>
+                    <tbody id="compliance-table">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h3>Recent Quote Requests</h3>
+                <table>
+                    <thead><tr><th>Name</th><th>Service</th><th>Email</th><th>Date</th></tr></thead>
+                    <tbody id="quotes-table">
+                        <!-- Loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loadData = () => {
+            // Load Compliance
+            const compTable = document.getElementById('compliance-table');
+            const compData = JSON.parse(localStorage.getItem('complianceRequests')) || [];
+            compTable.innerHTML = compData.length === 0 ? '<tr><td colspan="4">No requests yet.</td></tr>' : 
+                compData.map(d => `<tr><td>${d.company}</td><td>${d.standard}</td><td>${d.status}</td><td>${d.date}</td></tr>`).join('');
+
+            // Load Quotes
+            const quoteTable = document.getElementById('quotes-table');
+            const quoteData = JSON.parse(localStorage.getItem('quoteRequests')) || [];
+            quoteTable.innerHTML = quoteData.length === 0 ? '<tr><td colspan="4">No quotes yet.</td></tr>' : 
+                quoteData.map(d => `<tr><td>${d.name}</td><td>${d.service}</td><td>${d.email}</td><td>${d.date}</td></tr>`).join('');
+        };
+
+        // Load on start
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
